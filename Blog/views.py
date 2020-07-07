@@ -5,7 +5,8 @@ from django.views.generic import (
     ListView,
     DetailView,
     CreateView,
-    UpdateView
+    UpdateView,
+    DeleteView
 )
 from .models import Post
 
@@ -55,6 +56,20 @@ class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
         else:
             return False
 
+
+
+
+class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
+    model = Post
+    template_name = "blog/post_confirm_delete.html"
+    success_url = "/"
+
+    def test_func(self):
+        post =  self.get_object()
+        if self.request.user == post.author:
+            return True
+        else:
+            return False
 
 
 def about(request):
